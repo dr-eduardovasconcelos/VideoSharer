@@ -1,18 +1,13 @@
-# Etapa 1: Compilação com Maven e Java 17
-FROM maven:3.8.5-openjdk-17 AS build
+FROM eclipse-temurin:21-jdk
+
 WORKDIR /app
+
 COPY . .
 
-# Entra diretamente na pasta do NetBeans para compilar
-RUN cd VideoSharer && mvn clean package -DskipTests
+RUN chmod +x mvnw
 
-# Etapa 2: Execução com Tomcat 9 e Java 17
-FROM tomcat:9-jdk17
-RUN rm -rf /usr/local/tomcat/webapps/*
-
-# Copia o arquivo .war gerado de dentro da pasta VideoSharer
-COPY --from=build /app/*.war /usr/local/tomcat/webapps/ROOT.war
+RUN ./mvnw clean package -DskipTests
 
 EXPOSE 8080
-CMD ["catalina.sh", "run"]
 
+CMD ["java", "-jar", "target/VideoSharer.war"]
