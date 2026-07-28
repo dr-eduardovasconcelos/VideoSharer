@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 
 # Entra diretamente na pasta do NetBeans para compilar
-RUN cd VideoSharer && mvn clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Etapa 2: Execução com Tomcat 9 e Java 17
 FROM tomcat:9-jdk17
