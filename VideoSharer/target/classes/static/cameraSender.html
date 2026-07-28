@@ -1,0 +1,105 @@
+<html>
+
+<head>
+
+
+    <title>getUserMedia</title>
+
+    <title></title>
+</head>
+
+<body onload="init()">
+    <video id="vid" autoplay="false">
+
+    </video>
+
+    <script>
+
+
+        var socket = {}
+
+        async function init(e) {
+            if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+                const video = document.getElementById("vid")
+
+                socket = await new WebSocket(`wss://videosharer.onrender.com/camera/ze`)
+
+                socket.binaryType = 'arraybuffer'
+                socket.onmessage = function (e) {
+
+                }
+
+                const constraints = {
+                    video: {
+                        width: {
+                            min: 100,
+                            ideal: 100,
+                            max: 100,
+                        },
+                        height: {
+                            min: 100,
+                            ideal: 100,
+                            max: 100,
+                        },
+                        facingMode: "enviroment"
+                    },
+                }
+
+                const videoStream = await navigator.mediaDevices.getUserMedia(constraints)
+
+                video.srcObject = videoStream
+
+                const stream = video.captureStream(25)
+
+                const recordedChunks = [];
+
+                const options = { mimeType: "video/webm; codecs=vp9" };
+
+                const mediaRecorder = new MediaRecorder(stream, options);
+
+                mediaRecorder.ondataavailable = handleDataAvailable;
+                mediaRecorder.start();
+
+                async function handleDataAvailable(event) {
+                    console.log("data-available");
+                    if (event.data.size > 0) {
+                        //recordedChunks.push(event.data);
+                        
+
+                        //console.log(blob.type)
+
+                        /*var reader = new FileReader();
+                        reader.onload = function (event) {
+                            arrayBuffer = event.target.result;
+                        };
+                        await reader.readAsArrayBuffer(blob)
+                        console.log(blob.stream().getReader())*/
+
+
+                        
+                        new Response(event.data).arrayBuffer().then(data => {
+                            console.log(data)
+                            socket.send(new Uint8Array(data))
+                           
+                        });
+
+                        //await socket.send()
+
+                    } else {
+
+                    }
+                }
+
+                setInterval((e) => {
+                    mediaRecorder.stop()
+                    mediaRecorder.start()
+                }, 4000)
+            }
+        }
+
+
+
+    </script>
+</body>
+
+</html>
