@@ -4,10 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN mvn clean package -DskipTests
+RUN ./mvnw clean package -DskipTests
 
-
-FROM tomcat:9-jdk17
+FROM eclipse-temurin:21-jre
 
 RUN rm -rf /usr/local/tomcat/webapps/*
 
