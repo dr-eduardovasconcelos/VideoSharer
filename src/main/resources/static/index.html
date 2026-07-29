@@ -16,8 +16,10 @@
             <a class="btn btn-ghost text-xl text-primary font-bold">VideoSharer</a>
         </div>
         <div class="flex-none gap-2">
-            <input type="text" id="cameraId" placeholder="Digite o ID da transmissão" class="input input-bordered"/>
+            <form name="formCamera">
+            <input type="text" name="cameraIn" placeholder="Digite o ID da transmissão" class="input input-bordered"/>
             <button class="btn btn-primary btn-sm live">Iniciar Live</button>
+            </form>
         </div>
     </div>
 
@@ -95,15 +97,22 @@
 
         }
 
-        const botaoLive = document.querySelector(".live")
+        document.forms["formCamera"].addEventListener("submit", function(event){
 
-        botaoLive.addEventListener("click", function(event){
-            const id = document.getElementById("cameraId").getAttribute("value")
+            event.preventDefault()
+            
+            const formData = new FormData(event.target)
+
+            const data = {}
+
+            for([key,value] of formData){
+                data[key]=value
+            }
 
             if(id === "" || id === undefined){
                 alert("é preciso definir um id")
             }else{
-                location.href="cameraSender.html?id"+id
+                location.href="cameraSender.html?id="+data.cameraIn
             }
         })
     </script>
