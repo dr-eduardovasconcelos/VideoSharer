@@ -16,7 +16,8 @@
             <a class="btn btn-ghost text-xl text-primary font-bold">VideoSharer</a>
         </div>
         <div class="flex-none gap-2">
-            <button class="btn btn-primary btn-sm">Iniciar Live</button>
+            <input type="text" id="cameraId" placeholder="Digite o ID da transmissão" class="input input-bordered"/>
+            <button class="btn btn-primary btn-sm live">Iniciar Live</button>
         </div>
     </div>
 
@@ -54,11 +55,11 @@
                         </div>
                         <div>
                             <h2 class="card-title text-base font-bold">__numero__</h2>
-                            <p class="text-xs opacity-70">__ID__</p>
+                            <p class="text-xs opacity-70">__id__</p>
                         </div>
                     </div>
                     <div class="card-actions justify-end mt-3">
-                        <button class="btn btn-primary btn-sm w-full">Assistir Live</button>
+                        <a href="videoReceiver.html?id=__idlink__" class="btn btn-primary btn-sm w-full">Assistir Live</a>
                     </div>
                 </div>
             </div>
@@ -86,12 +87,25 @@
                 
                 let innerCard = card.replace("__numero__",indice)
                 innerCard = innerCard.replace("__id__", element)
+                innerCard = innerCard.replace("__idlink__", element)
 
                 grid.innerHTML += innerCard
 
             });
 
         }
+
+        const botaoLive = document.querySelector(".live")
+
+        botaoLive.addEventListener("click", function(event){
+            const id = document.getElementById("idCamera").getAttribute("value")
+
+            if(id === "" || id === undefined){
+                alert("é preciso definir um id")
+            }else{
+                location.href="cameraSender.html?id"+id
+            }
+        })
     </script>
 
 </body>

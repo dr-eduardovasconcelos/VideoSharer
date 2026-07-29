@@ -8,9 +8,14 @@
 
         async function init(e) {
 
+
+            const parametros = new URLSearchParams(window.location.search)
+
+            const id = parametros.get("id")
+
             const video = document.getElementById("vid")
 
-            const socket = await new WebSocket("wss://videosharer.onrender.com/screen/ze")
+            const socket = await new WebSocket("wss://videosharer.onrender.com/screen/"+id)
 
             const mSource = new MediaSource()
             const url = URL.createObjectURL(mSource);

@@ -15,6 +15,11 @@
 
     <script>
 
+        const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        const parametros = new URLSearchParams(window.location.search)
+
+        const id = parametros.get("id")
 
         var socket = {}
 
@@ -22,7 +27,7 @@
             if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
                 const video = document.getElementById("vid")
 
-                socket = await new WebSocket(`wss://videosharer.onrender.com/ws/camera/ze`)
+                socket = await new WebSocket(`wss://videosharer.onrender.com/ws/camera/${id}`)
 
                 socket.binaryType = 'arraybuffer'
                 socket.onmessage = function (e) {
@@ -75,13 +80,15 @@
                         await reader.readAsArrayBuffer(blob)
                         console.log(blob.stream().getReader())*/
 
-
+                        
                         
                         new Response(event.data).arrayBuffer().then(data => {
                             console.log(data)
                             socket.send(new Uint8Array(data))
                            
                         });
+
+                        await sleep(1000)
 
                         //await socket.send()
 
