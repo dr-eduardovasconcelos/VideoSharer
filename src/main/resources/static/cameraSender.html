@@ -22,7 +22,7 @@
             if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
                 const video = document.getElementById("vid")
 
-                socket = await new WebSocket(`wss://videosharer.onrender.com/camera/ze`)
+                socket = await new WebSocket(`wss://videosharer.onrender.com/ws/camera/ze`)
 
                 socket.binaryType = 'arraybuffer'
                 socket.onmessage = function (e) {
