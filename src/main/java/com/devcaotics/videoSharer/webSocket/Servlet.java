@@ -12,7 +12,7 @@ import java.util.Set;
  * Servlet implementation class Servlet
  */
 
-@WebServlet(urlPatterns = "/api/rest/ids", name = "Servlet")
+@WebServlet(urlPatterns = "/api/rest/idsServlet", name = "Servlet")
 public class Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
