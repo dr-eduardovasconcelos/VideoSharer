@@ -23,7 +23,7 @@
 
         var socket = {}
 
-        async function init(e) {
+        /*async function init(e) {
             if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
                 const video = document.getElementById("vid")
 
@@ -82,7 +82,7 @@
 
                         
                         
-                        new Response(event.data).arrayBuffer().then(data => {
+        /*               new Response(event.data).arrayBuffer().then(data => {
                             console.log(data)
                             socket.send(new Uint8Array(data))
                            
@@ -102,7 +102,72 @@
                     mediaRecorder.start()
                 }, 4000)
             }
-        }
+        }*/
+
+        async function init(e) {
+    if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+        const video = document.getElementById("vid");
+
+        // Inicializa o WebSocket
+        socket = new WebSocket(`wss://videosharer.onrender.com/ws/camera/${id}`);
+        socket.binaryType = 'arraybuffer';
+        
+        socket.onmessage = function (e) { };
+
+        // Aguarda a conexão do WebSocket abrir antes de começar a enviar dados
+        await new Promise((resolve) => {
+            socket.onopen = resolve;
+        });
+
+        const constraints = {
+            video: {
+                width: { min: 100, ideal: 100, max: 100 },
+                height: { min: 100, ideal: 100, max: 100 },
+                facingMode: "environment" // Corrigido o erro de digitação de "enviroment"
+            },
+        };
+
+        // Captura a câmera do usuário
+        const videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = videoStream;
+
+        // Cria um elemento canvas em memória para extrair os frames (não precisa estar no HTML)
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        
+        // Define o tamanho fixo baseado nas suas constraints de 100x100
+        canvas.width = 100;
+        canvas.height = 100;
+
+        // Cria um temporizador que roda a cada 1 segundo (1000 milissegundos)
+        const enviarFrameInterval = setInterval(async () => {
+            // Verifica se o WebSocket ainda está aberto antes de tentar enviar
+            if (socket.readyState !== WebSocket.OPEN) {
+                clearInterval(enviarFrameInterval);
+                return;
+            }
+
+            // 1. Desenha o frame atual do elemento <video> para dentro do canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // 2. Transforma o frame do canvas em um Blob de imagem (JPEG ou PNG é mais leve para frames únicos)
+            canvas.toBlob(async (blob) => {
+                if (blob) {
+                    // 3. Converte o Blob diretamente em ArrayBuffer de forma limpa
+                    const arrayBuffer = await blob.arrayBuffer();
+                    
+                    console.log("Enviando frame de 1 segundo:", arrayBuffer);
+                    socket.send(new Uint8Array(arrayBuffer));
+                }
+            }, 'image/jpeg', 0.7); // 0.7 define a qualidade do JPEG (reduz o uso de rede)
+
+        }, 1000);
+
+        // Opcional: Salve a referência do interval para conseguir pará-lo depois se necessário
+        window.currentFrameInterval = enviarFrameInterval;
+    }
+}
+
 
         window.addEventListener('beforeunload', (event) => {
             socket.close()
