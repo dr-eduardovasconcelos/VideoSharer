@@ -141,7 +141,7 @@
             const id = parametros.get("id")
 
             // Conecta ao mesmo canal do WebSocket
-            const receptorSocket = new WebSocket(`wss://videosharer.onrender.com/ws/${id}`);
+            const receptorSocket = new WebSocket(`wss://videosharer.onrender.com/ws/screen/${id}`);
 
             // Define o tipo de dado binário esperado (deve ser igual ao do emissor)
             receptorSocket.binaryType = 'arraybuffer';
@@ -175,6 +175,12 @@
             };
 
         }
+
+        
+        window.addEventListener('beforeunload', (event) => {
+            socket.close()
+        });
+
 
     </script>
 </body>
