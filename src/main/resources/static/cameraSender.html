@@ -104,6 +104,9 @@
             }
         }
 
+        window.addEventListener('beforeunload', (event) => {
+            socket.close()
+        });
 
 
     </script>

@@ -22,7 +22,7 @@ public class GeneralEndpoint {
 	
 	@OnClose
 	public void close(Session session) {
-		
+		ServiceHolder.byeEndpoint(this);
 	}
 	
 	@OnError
