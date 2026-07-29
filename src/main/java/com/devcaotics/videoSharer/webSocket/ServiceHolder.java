@@ -44,5 +44,9 @@ public class ServiceHolder {
 			byeScreen((Screen)end);
 		}
 	}
+	
+	public static Set<String> getIds(){
+		return cameras.keySet();
+	}
 
 }
