@@ -12,7 +12,7 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 
 @Component
-@ServerEndpoint("/camera/{id}")
+@ServerEndpoint("/ws/camera/{id}")
 public class Camera extends GeneralEndpoint{
 
 	private List<Screen> screens = new ArrayList<Screen>();
