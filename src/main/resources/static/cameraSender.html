@@ -136,8 +136,8 @@
                 const context = canvas.getContext('2d');
 
                 // Define o tamanho fixo baseado nas suas constraints de 100x100
-                canvas.width = 100;
-                canvas.height = 100;
+                canvas.width = 400;
+                canvas.height = 400;
 
                 // Cria um temporizador que roda a cada 1 segundo (1000 milissegundos)
                 const enviarFrameInterval = setInterval(async () => {
@@ -159,7 +159,7 @@
                             console.log("Enviando frame de 1 segundo:", arrayBuffer);
                             socket.send(new Uint8Array(arrayBuffer));
                         }
-                    }, 'image/jpeg', 0.7); // 0.7 define a qualidade do JPEG (reduz o uso de rede)
+                    }, 'image/jpeg', 0.9); // 0.7 define a qualidade do JPEG (reduz o uso de rede)
 
                 }, 5000);
 
