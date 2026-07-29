@@ -1,11 +1,13 @@
 package com.devcaotics.videoSharer.webSocket;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
+@RestController
 public class Controller{
-  @GetMapping("/")
-  public String init(){ return "index"}
+  @GetMapping("/ids")
+  public String init(){ 
+      return "";
+  }
 
 }
