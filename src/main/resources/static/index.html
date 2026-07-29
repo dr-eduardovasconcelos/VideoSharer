@@ -1,1 +1,70 @@
-indice
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoSharer - Transmissões ao Vivo</title>
+    <!-- Tailwind CSS e DaisyUI CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="min-h-screen bg-base-200 text-base-content">
+
+    <!-- Navbar -->
+    <div class="navbar bg-base-100 shadow-md px-6">
+        <div class="flex-1">
+            <a class="btn btn-ghost text-xl text-primary font-bold">VideoSharer</a>
+        </div>
+        <div class="flex-none gap-2">
+            <button class="btn btn-primary btn-sm">Iniciar Live</button>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto p-6">
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-extrabold tracking-tight">Transmissões ao Vivo</h1>
+                <p class="text-sm opacity-70">Acompanhe quem está transmitindo agora mesmo.</p>
+            </div>
+            <div class="badge badge-error gap-2 text-white font-medium">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                Ao Vivo
+            </div>
+        </div>
+
+        <!-- Lista de Transmissões (Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Card de Transmissão 1 -->
+            <div class="card bg-base-100 shadow-xl border border-base-300" id="card">
+                <figure class="relative bg-black h-48 flex items-center justify-center">
+                    <span class="badge badge-error absolute top-3 left-3 text-white text-xs">AO VIVO</span>
+                    <span class="text-xs opacity-50 text-white">[Pré-visualização do Vídeo]</span>
+                </figure>
+                <div class="card-body p-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="avatar placeholder">
+                            <div class="bg-neutral text-neutral-content rounded-full w-10">
+                                <span class="text-xs">JS</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-base font-bold">__numero__</h2>
+                            <p class="text-xs opacity-70">__ID__</p>
+                        </div>
+                    </div>
+                    <div class="card-actions justify-end mt-3">
+                        <button class="btn btn-primary btn-sm w-full">Assistir Live</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>
