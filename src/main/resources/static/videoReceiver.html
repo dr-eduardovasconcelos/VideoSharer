@@ -15,7 +15,7 @@
 
             const video = document.getElementById("vid")
 
-            const socket = await new WebSocket("wss://videosharer.onrender.com/screen/"+id)
+            const socket = await new WebSocket("wss://videosharer.onrender.com/ws/screen/"+id)
 
             const mSource = new MediaSource()
             const url = URL.createObjectURL(mSource);
