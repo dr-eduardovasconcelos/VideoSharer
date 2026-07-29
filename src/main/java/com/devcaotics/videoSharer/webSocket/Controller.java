@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class Controller{
   @GetMapping("/ids")
   public String init(){ 
+    
       return ServiceHolder.getIds();
+    
   }
 
 }
