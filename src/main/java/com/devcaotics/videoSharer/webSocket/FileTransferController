@@ -10,11 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
-@RestController
-@RequestMapping("/files")
+
 public class FileController {
 
-    // Estrutura de dados para armazenar o arquivo em memória
+/*    // Estrutura de dados para armazenar o arquivo em memória
     private static class ArquivoMemoria {
         private final byte[] conteudo;
         private final String nomeOriginal;
@@ -79,5 +78,5 @@ public class FileController {
     @GetMapping
     public ResponseEntity<?> getMessage(){
         return ResponseEntity.ok("passou");
-    }
+    }*/
 }
