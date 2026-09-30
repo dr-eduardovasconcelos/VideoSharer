@@ -68,7 +68,7 @@ public class Controller{
     // 2. Endpoint para Buscar (Download) o arquivo pelo Identificador
     @GetMapping("/files/{id}")
     public ResponseEntity<byte[]> downloadArquivo(@PathVariable String id) {
-        ArquivoFile = armazenamentoMemoria.get(id);
+        ArquivoMemoria arquivo = armazenamentoMemoria.get(id);
 
         // Se o arquivo não existir na memória, retorna 404 Not Found
         if (arquivo == null) {
