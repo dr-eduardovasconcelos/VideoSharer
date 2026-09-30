@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Arquivos - API</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- DaisyUI CDN -->
+    <link href="https://jsdelivr.net" rel="stylesheet" type="text/css" />
+</head>
+<body class="bg-base-200 min-h-screen flex items-center justify-center p-4">
+
+<div class="card w-full max-w-xl bg-base-100 shadow-xl border border-base-300">
+    <div class="card-body gap-6">
+        <h1 class="card-title text-2xl font-bold text-primary border-b border-base-300 pb-2">
+            📁 Gerenciador de Arquivos API
+        </h1>
+
+        <!-- SEÇÃO 1: ENVIAR ARQUIVO -->
+        <section>
+            <h2 class="text-lg font-semibold mb-3 text-secondary">Enviar Arquivo (POST)</h2>
+            <form id="uploadForm" class="space-y-4">
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">ID do Arquivo</span></label>
+                    <input type="text" id="uploadId" placeholder="Ex: 123" class="input input-bordered w-full" required />
+                </div>
+                
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">Selecione o Arquivo</span></label>
+                    <input type="file" id="fileInput" class="file-input file-input-bordered file-input-primary w-full" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full">Enviar Arquivo</button>
+            </form>
+            <div id="uploadStatus" class="mt-3"></div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- SEÇÃO 2: RECUPERAR ARQUIVO -->
+        <section>
+            <h2 class="text-lg font-semibold mb-3 text-secondary">Recuperar Arquivo (GET)</h2>
+            <form id="downloadForm" class="space-y-4">
+                <div class="form-control w-full">
+                    <label class="label"><span class="label-text font-medium">ID do Arquivo</span></label>
+                    <input type="text" id="downloadId" placeholder="Ex: 123" class="input input-bordered w-full" required />
+                </div>
+
+                <button type="submit" class="btn btn-secondary w-full">Buscar Arquivo</button>
+            </form>
+            <div id="downloadStatus" class="mt-3"></div>
+            <div id="preview-container" class="mt-4 flex justify-center"></div>
+        </section>
+    </div>
+</div>
+
+<script>
+    const BASE_URL = 'https://onrender.com';
+
+    // LÓGICA DE ENVIO (POST)
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const id = document.getElementById('uploadId').value.trim();
+        const fileInput = document.getElementById('fileInput');
+        const statusDiv = document.getElementById('uploadStatus');
+        
+        if (!fileInput.files.length) {
+            showAlert(statusDiv, 'error', 'Por favor, selecione um arquivo.');
+            return;
+        }
+
+        showLoadingAlert(statusDiv, 'Enviando arquivo para o servidor...');
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]); 
+
+        try {
+            const response = await fetch(`${BASE_URL}/${id}`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                showAlert(statusDiv, 'success', 'Arquivo enviado com sucesso!');
+                document.getElementById('uploadForm').reset();
+            } else {
+                const errorText = await response.text();
+                showAlert(statusDiv, 'error', `Erro ${response.status}: ${errorText || 'Falha no envio.'}`);
+            }
+        } catch (error) {
+            showAlert(statusDiv, 'error', `Erro de rede: ${error.message}`);
+        }
+    });
+
+    // LÓGICA DE RECUPERAÇÃO (GET)
+    document.getElementById('downloadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const id = document.getElementById('downloadId').value.trim();
+        const statusDiv = document.getElementById('downloadStatus');
+        const previewContainer = document.getElementById('preview-container');
+        
+        showLoadingAlert(statusDiv, 'Buscando arquivo...');
+        previewContainer.innerHTML = ""; 
+
+        try {
+            const response = await fetch(`${BASE_URL}/${id}`, {
+                method: 'GET'
+            });
+
+            if (!response.ok) {
+                showAlert(statusDiv, 'error', `Erro ${response.status}: Arquivo não encontrado ou erro interno.`);
+                return;
+            }
+
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+            
+            showAlert(statusDiv, 'success', 'Arquivo recuperado com sucesso!');
+
+            // Botão de download estilizado com DaisyUI
+            const downloadLink = document.createElement('a');
+            downloadLink.href = downloadUrl;
+            downloadLink.download = `arquivo_${id}`; 
+            downloadLink.className = "btn btn-success btn-outline gap-2 w-full";
+            downloadLink.innerHTML = `
+                <svg xmlns="http://w3.org" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Baixar Arquivo Recuperado
+            `;
+            
+            previewContainer.appendChild(downloadLink);
+
+        } catch (error) {
+            showAlert(statusDiv, 'error', `Erro de rede: ${error.message}`);
+        }
+    });
+
+    // Funções utilitárias para renderizar os alertas visuais do DaisyUI
+    function showAlert(container, type, message) {
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+        const icon = type === 'success' 
+            ? '<svg xmlns="http://w3.org" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'
+            : '<svg xmlns="http://w3.org" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+        
+        container.innerHTML = `
+            <div class="alert ${alertClass} shadow-sm py-2">
+                ${icon}
+                <span class="text-sm">${message}</span>
+            </div>
+        `;
+    }
+
+    function showLoadingAlert(container, message) {
+        container.innerHTML = `
+            <div class="alert alert-info bg-opacity-20 shadow-sm py-2">
+                <span class="loading loading-spinner loading-sm text-info"></span>
+                <span class="text-sm font-medium text-info">${message}</span>
+            </div>
+        `;
+    }
+</script>
+
+</body>
+</html>
