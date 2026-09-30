@@ -35,7 +35,7 @@ public class FileController {
     private final ConcurrentHashMap<String, ArquivoMemoria> armazenamentoMemoria = new ConcurrentHashMap<>();
 
     // 1. Endpoint para Enviar (Upload) o arquivo
-    @PostMapping(value = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadArquivo(@RequestParam("file") MultipartFile file,@PathVariable String id) {
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Por favor, selecione um arquivo válido.");
@@ -75,4 +75,9 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getNomeOriginal() + "\"")
                 .body(arquivo.getConteudo());
     }
+
+    @GetMapping
+    public ResponseEntity<?> getMessage(){
+        return ResponseEntity.ok("passou");
+    }
 }
