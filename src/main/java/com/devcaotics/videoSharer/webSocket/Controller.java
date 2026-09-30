@@ -91,4 +91,25 @@ public class Controller{
     
   }
 
+ @PostMapping("/text/write")
+    public ResponseEntity<?> writeText(@RequestBody Text text) {
+
+        TextHolder.addText(text);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/text/read/{key}")
+    public ResponseEntity<?> readText(@PathVariable("key") String key){
+
+        String text = TextHolder.getTextString(key);
+
+        if(text != null && !text.isEmpty()){
+            return ResponseEntity.ok(text);
+        }
+
+        return ResponseEntity.notFound().build();
+        
+    }
+
 }
