@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
-@RequestMapping("/api/rest/arquivos")
+@RequestMapping("/api/rest/files")
 public class FileController {
 
     // Estrutura de dados para armazenar o arquivo em memória
