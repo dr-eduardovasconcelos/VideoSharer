@@ -1,1 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transferência de Texto Simples</title>
+    <!-- Tailwind CSS v4 Browser e daisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-base-200 min-h-screen flex flex-col justify-between">
+    <a class="btn btn-ghost text-xl text-primary font-bold" href="https://videosharer.onrender.com">VideoSharer</a>
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl flex-grow flex flex-col">
+        <div class="card bg-base-100 shadow-xl flex-grow flex flex-col">
+            <div class="card-body flex-grow flex flex-col">
+                <h2 class="card-title text-2xl mb-4">Enviar Texto</h2>
+                
+                <form class="flex-grow flex flex-col gap-6" name="transferForm">
+                    <!-- Campo do ID do Texto -->
+                    <label class="floating-label">
+                        <span>ID do Texto</span>
+                        <input type="text" id="texto-id" placeholder="Ex: meu-texto-123" class="input input-bordered w-full" required />
+                    </label>
+
+                    <!-- Grande Textarea abaixo -->
+                    <div class="flex-grow flex flex-col">
+                        <label class="label mb-1">
+                            <span class="label-text font-medium">Conteúdo</span>
+                        </label>
+                        <textarea id="texto-conteudo" placeholder="Digite ou cole seu texto simples aqui..." class="textarea textarea-bordered flex-grow w-full min-h-[300px] resize-y font-mono" required></textarea>
+                    </div>
+
+                    <!-- Botão de Ação -->
+                    <div class="card-actions justify-end mt-auto">
+                        <button type="submit" class="btn btn-primary px-8">Transferir Texto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rodapé Simples -->
+    <footer class="footer footer-center p-4 bg-base-300 text-base-content">
+        <div>
+            <p>Página de Transferência Simples</p>
+        </div>
+    </footer>
+    <script>
+        document.getElementById("texto-id").addEventListener("blur",async function(event){
+
+            const id = event.target.value
+
+            if(id != undefined || id !== ""){
+                const response = await fetch(`https://texttransfer-rdt6.onrender.com/api/rest/text/read/${id}`,{
+
+                    method:'get',
+                    headers:{
+                        'content-type':'application/json'
+                    }
+
+                })
+
+                
+
+                if(response.status != 404){
+
+                    const text = await response.text()
+
+                    document.getElementById("texto-conteudo").value = text
+
+
+                }
+
+
+            }
+
+        })
+
+        document.forms["transferForm"].addEventListener("submit", function(event){
+
+            event.preventDefault()
+
+            const conteudo = document.getElementById("texto-conteudo").value
+
+            const textId = document.getElementById("texto-id").value
+
+            const textJson = {
+                id:textId,
+                text:conteudo
+            }
+
+            fetch("https://texttransfer-rdt6.onrender.com/api/rest/text/write",
+                {
+                    method:'post',
+                    headers:{
+                        "content-type":"application/json",
+                    },
+                    body:JSON.stringify(textJson)
+                }
+            ).then(response => {
+                alert(`texto ${textJson.id} atualizado no servidor`)
+            })
+
+        })
+    </script>
+</body>
+</html>
 
